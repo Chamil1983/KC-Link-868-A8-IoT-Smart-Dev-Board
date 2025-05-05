@@ -36,15 +36,15 @@ A professional ESP32-based IoT control board featuring 8 relay outputs, 8 optica
 
 ## 📋 Table of Contents
 
-- [Installation](#installation)
+- [Installation](#🔧 installation)
 - [Wiring Guide](#wiring-guide)
 - [Library Usage](#library-usage)
 - [Examples](#examples)
 - [API Reference](#api-reference)
 - [Hardware Documentation](hardware.md)
 - [Troubleshooting](#troubleshooting)
-- [Contributing](contributing.md)
-- [License](LICENSE)
+- [Contributing](#contributing)
+- [License](#License)
 
 ## 🔧 Installation
 
