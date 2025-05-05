@@ -103,8 +103,8 @@ Lamp -----------> Relay NO ----> AC Power Neutral
 ```
 
 ### Analog Inputs
-- Connect analog voltage sources between analog input terminals and GND
-- Input range: 0-5V DC
+- Connect analog voltage sources between the analog input terminals and GND
+- Input range: 0- 5V DC
 
 ### Temperature Sensors
 - Connect DS18B20, DHT11, DHT22, or DHT21 sensors to the dedicated sensor ports
@@ -210,7 +210,7 @@ float humidity = board.getHumidity(int sensorNumber);
 ### Network Communication
 
 ```cpp
-// Connect to WiFi
+// Connect to the WiFi
 board.connectWiFi(const char* ssid, const char* password);
 
 // Start Ethernet connection
@@ -219,13 +219,13 @@ board.beginEthernet();
 // Start web server
 board.beginWebServer();
 
-// Connect to MQTT broker
+// Connect to the MQTT broker
 board.connectMQTT(const char* brokerIP, int port, const char* username, const char* password);
 ```
 
 ## 📂 Hardware Documentation
 
-For detailed hardware specifications, please refer to the [Hardware Documentation](./docs/hardware.md) which includes:
+For detailed hardware specifications, please refer to the [Hardware Documentation](hardware.md), which includes:
 
 - Board layout and dimensions
 - Schematic diagrams
@@ -238,10 +238,10 @@ For detailed hardware specifications, please refer to the [Hardware Documentatio
 Common issues and their solutions:
 
 ### No Power LED
-- Check power supply connections and voltage (9-24V DC)
+- Check power supply connections and voltage (9- 24V DC)
 - Verify polarity is correct
 
-### Cannot Connect via USB
+### Cannot connect via USB
 - Install CH340C drivers
 - Try a different USB cable
 - Ensure proper COM port is selected in Arduino IDE
@@ -270,7 +270,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+Please read [CONTRIBUTING.md](contributing.md) for details on our code of conduct and the process for submitting pull requests.
 
 ## 📝 License
 
@@ -284,5 +284,22 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - All contributors to this project
 
 ---
+
+## Contact and Support
+
+For technical support, please contact MESA:
+
+- **Website:** [www.microcodeeng.com](https://www.microcodeeng.com)
+- **Email:** microcode-eng@outlook.com
+
+For issues related to this repository, please open an issue on GitHub.
+
+---
+
+<p align="center">
+  <img src="LOGO/MESA_logo.png" alt="MESA Logo" width="200"/><br>
+
+  <I align="center">Designed and manufactured by Microcode Embedded Systems and Automation (MESA)</i>
+</p>
 
 © 2025 MESA Electronics. All Rights Reserved.
