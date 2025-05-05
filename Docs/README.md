@@ -258,7 +258,7 @@ Common issues and their solutions:
 - Verify I²C wiring and pullup resistors
 
 ### More Issues
-See the [Troubleshooting Guide](./docs/troubleshooting.md) for additional help.
+See the [Troubleshooting Guide](/Docs/troubleshooting.md) for additional help.
 
 ## 🤝 Contributing
 
