@@ -1,8 +1,8 @@
 # KC-Link PRO A8
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub release](https://img.shields.io/github/release/mesa-iot/kc-link-pro-a8.svg)](https://github.com/mesa-iot/kc-link-pro-a8/releases/)
-[![Arduino Compatible](https://img.shields.io/badge/Arduino-Compatible-brightgreen)](https://www.arduino.cc/)
+[![Arduino Compatible](https://img.shields.io/badge/Arduino-Compatible-green.svg)](https://www.arduino.cc/)
+[![Platform: ESP32](https://img.shields.io/badge/Platform-ESP32-blue.svg)](https://www.espressif.com/en/products/socs/esp32)
 [![ESPHome Compatible](https://img.shields.io/badge/ESPHome-Compatible-green.svg)](https://esphome.io/)
 [![Home Assistant Compatible](https://img.shields.io/badge/Home_Assistant-Compatible-green.svg)](https://www.home-assistant.io/)
 [![Release Version](https://img.shields.io/badge/Release-v1.1.0-green.svg)](https://github.com/mesa-automation/cortex-link-a8r-m/releases)
