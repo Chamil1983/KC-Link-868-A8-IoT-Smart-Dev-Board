@@ -36,12 +36,12 @@ A professional ESP32-based IoT control board featuring 8 relay outputs, 8 optica
 
 ## 📋 Table of Contents
 
-- [Installation](https://github.com/Chamil1983/KC-Link-868-A8-IoT-Smart-Dev-Board/blob/main/Docs/README.md#-#installation)
+- [Installation](https://github.com/Chamil1983/KC-Link-868-A8-IoT-Smart-Dev-Board/tree/main/Docs#-installation)
 - [Wiring Guide](https://github.com/Chamil1983/KC-Link-868-A8-IoT-Smart-Dev-Board/blob/main/Docs/README.md#-wiring-guide)
-- [Library Usage](https://github.com/Chamil1983/KC-Link-868-A8-IoT-Smart-Dev-Board/blob/main/Docs/README.md#-#library-usage)
+- [Library Usage](https://github.com/Chamil1983/KC-Link-868-A8-IoT-Smart-Dev-Board/blob/main/Docs/README.md#-library-usage)
 - [Examples](https://github.com/Chamil1983/KC-Link-868-A8-IoT-Smart-Dev-Board/blob/main/Docs/README.md#-#examples)
-- [API Reference](https://github.com/Chamil1983/KC-Link-868-A8-IoT-Smart-Dev-Board/blob/main/Docs/README.md#-#api-reference)
-- [Hardware Documentation](https://github.com/Chamil1983/KC-Link-868-A8-IoT-Smart-Dev-Board/blob/main/Docs/README.md#-#hardware-documentation)
+- [API Reference](https://github.com/Chamil1983/KC-Link-868-A8-IoT-Smart-Dev-Board/blob/main/Docs/README.md#-api-reference)
+- [Hardware Documentation](https://github.com/Chamil1983/KC-Link-868-A8-IoT-Smart-Dev-Board/blob/main/Docs/README.md#-hardware-documentation)
 - [Troubleshooting](https://github.com/Chamil1983/KC-Link-868-A8-IoT-Smart-Dev-Board/blob/main/Docs/README.md#-#troubleshooting)
 - [Contributing](https://github.com/Chamil1983/KC-Link-868-A8-IoT-Smart-Dev-Board/blob/main/Docs/README.md#-#contributing)
 - [License](https://github.com/Chamil1983/KC-Link-868-A8-IoT-Smart-Dev-Board/blob/main/Docs/README.md#-#license)
