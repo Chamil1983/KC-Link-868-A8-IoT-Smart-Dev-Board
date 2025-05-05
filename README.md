@@ -51,10 +51,18 @@ A professional ESP32-based IoT control board featuring 8 relay outputs, 8 optica
 ### Library Installation
 
 1. **Using Arduino IDE Library Manager**:
+
+ - [Arduino IDE](https://www.arduino.cc/en/software) (1.8.x or higher)
+ - [ESP32 Arduino Core](https://github.com/espressif/arduino-esp32)
    - Open Arduino IDE
    - Navigate to Sketch > Include Library > Manage Libraries
    - Search for "KC-Link PRO"
    - Click Install
+
+
+- Required libraries:
+  - [Required Libraries](/Docs/libraries-doc.md)
+
 
 2. **Manual Installation**:
    ```bash
