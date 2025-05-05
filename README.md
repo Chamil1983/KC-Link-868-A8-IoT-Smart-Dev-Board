@@ -38,13 +38,13 @@ A professional ESP32-based IoT control board featuring 8 relay outputs, 8 optica
 
 - [Installation](#-installation)
 - [Wiring Guide](#-wiring-guide)
-- [Library Usage](https://github.com/Chamil1983/KC-Link-868-A8-IoT-Smart-Dev-Board/tree/main/Docs#-library-usage)
-- [Examples](https://github.com/Chamil1983/KC-Link-868-A8-IoT-Smart-Dev-Board/tree/main/Docs#-examples)
-- [API Reference](https://github.com/Chamil1983/KC-Link-868-A8-IoT-Smart-Dev-Board/tree/main/Docs#-api-reference)
-- [Hardware Documentation](https://github.com/Chamil1983/KC-Link-868-A8-IoT-Smart-Dev-Board/tree/main/Docs#-hardware-documentation)
-- [Troubleshooting](https://github.com/Chamil1983/KC-Link-868-A8-IoT-Smart-Dev-Board/tree/main/Docs#-troubleshooting)
-- [Contributing](https://github.com/Chamil1983/KC-Link-868-A8-IoT-Smart-Dev-Board/tree/main/Docs#-contributing)
-- [License](https://github.com/Chamil1983/KC-Link-868-A8-IoT-Smart-Dev-Board/tree/main/Docs#-license)
+- [Library Usage](#-library-usage)
+- [Examples](#-examples)
+- [API Reference](#-api-reference)
+- [Hardware Documentation](#-hardware-documentation)
+- [Troubleshooting](#-troubleshooting)
+- [Contributing](#-contributing)
+- [License](#-license)
 
 ## 🔧 Installation
 
@@ -266,7 +266,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 1. Fork the project
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature')
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
