@@ -1,0 +1,1159 @@
+<!-- 
+  KC-Link PRO A8 Web Interface
+  
+  This HTML file provides a responsive web interface for controlling
+  the KC-Link PRO A8 board. Features include:
+  - Relay control with ON/OFF buttons
+  - Real-time sensor data display
+  - System configuration options
+  - Scheduling interface
+  
+  The page uses AJAX to communicate with the board's API endpoints.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KC-Link PRO A8 Control Panel</title>
+  <style>
+    :root {
+      --primary-color: #2196F3;
+      --secondary-color: #03A9F4;
+      --success-color: #4CAF50;
+      --danger-color: #F44336;
+      --warning-color: #FF9800;
+      --info-color: #00BCD4;
+      --dark-color: #333;
+      --light-color: #f8f9fa;
+      --gray-color: #ccc;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 
+                   "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 1rem;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    h1, h2, h3, h4 {
+      margin-bottom: 0.5rem;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-right: -15px;
+      margin-left: -15px;
+    }
+    
+    .col {
+      flex: 1;
+      padding: 0 15px;
+      min-width: 300px;
+    }
+    
+    @media (max-width: 768px) {
+      .col {
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+    }
+    
+    .btn {
+      display: inline-block;
+      font-weight: 400;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      user-select: none;
+      border: 1px solid transparent;
+      padding: 0.375rem 0.75rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
+      margin-right: 5px;
+    }
+    
+    .btn-primary {
+      color: #fff;
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+    
+    .btn-primary:hover {
+      background-color: #0069d9;
+      border-color: #0062cc;
+    }
+    
+    .btn-success {
+      color: #fff;
+      background-color: var(--success-color);
+      border-color: var(--success-color);
+    }
+    
+    .btn-success:hover {
+      background-color: #378a3a;
+      border-color: #378a3a;
+    }
+    
+    .btn-danger {
+      color: #fff;
+      background-color: var(--danger-color);
+      border-color: var(--danger-color);
+    }
+    
+    .btn-danger:hover {
+      background-color: #c82333;
+      border-color: #bd2130;
+    }
+    
+    .btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      border-radius: 0.2rem;
+    }
+    
+    .control-group {
+      margin-bottom: 15px;
+    }
+    
+    .control-label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+    }
+    
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+    
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .slider {
+      background-color: var(--success-color);
+    }
+    
+    input:focus + .slider {
+      box-shadow: 0 0 1px var(--success-color);
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+    
+    .relay-control {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      align-items: center;
+    }
+    
+    .relay-label {
+      flex-grow: 1;
+    }
+    
+    .relay-status {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    
+    .relay-on {
+      background-color: var(--success-color);
+    }
+    
+    .relay-off {
+      background-color: var(--gray-color);
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+    }
+    
+    table th, table td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #dee2e6;
+    }
+    
+    .schedule-item {
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 10px;
+    }
+    
+    .schedule-actions {
+      text-align: right;
+    }
+    
+    .day-selector {
+      display: flex;
+      margin-top: 10px;
+    }
+    
+    .day-btn {
+      width: 35px;
+      height: 35px;
+      margin-right: 5px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background-color: #eee;
+      font-weight: bold;
+      user-select: none;
+    }
+    
+    .day-btn.selected {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .sensor-value {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--dark-color);
+    }
+    
+    .sensor-unit {
+      font-size: 0.9rem;
+      color: #666;
+      margin-left: 5px;
+    }
+    
+    .system-time {
+      color: white;
+      font-weight: bold;
+    }
+    
+    .input-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .input-group-addon {
+      padding: 0.375rem 0.75rem;
+      margin-bottom: 0;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #495057;
+      text-align: center;
+      background-color: #e9ecef;
+      border: 1px solid #ced4da;
+      border-radius: 0.25rem;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    
+    .form-control {
+      display: block;
+      width: 100%;
+      padding: 0.375rem 0.75rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #495057;
+      background-color: #fff;
+      background-clip: padding-box;
+      border: 1px solid #ced4da;
+      border-radius: 0.25rem;
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    
+    .input-group > .form-control {
+      position: relative;
+      flex: 1 1 auto;
+      width: 1%;
+      margin-bottom: 0;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .loading-spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border-left-color: var(--primary-color);
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .alert {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px;
+      border-radius: 4px;
+      color: white;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      max-width: 300px;
+      z-index: 1000;
+    }
+    
+    .alert-success {
+      background-color: var(--success-color);
+    }
+    
+    .alert-danger {
+      background-color: var(--danger-color);
+    }
+    
+    .alert-visible {
+      opacity: 1;
+    }
+    
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    
+    label {
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+    
+    select.form-control {
+      padding-right: 1.75rem;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 16px 12px;
+      appearance: none;
+    }
+    
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>KC-Link PRO A8 Control Panel</h1>
+      <div class="system-time" id="system-time">Loading...</div>
+    </header>
+    
+    <div class="row">
+      <!-- Relay Controls Column -->
+      <div class="col">
+        <div class="card">
+          <div class="card-title">Relay Controls</div>
+          <div id="relay-controls">
+            <div class="loading">
+              <div class="loading-spinner"></div>
+              <p>Loading relay status...</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-title">System Configuration</div>
+          <div class="control-group">
+            <div class="control-label">Automation Mode</div>
+            <label class="switch">
+              <input type="checkbox" id="auto-mode-toggle">
+              <span class="slider"></span>
+            </label>
+            <span id="auto-mode-status">Off</span>
+          </div>
+          
+          <div class="control-group">
+            <div class="control-label">Heating Mode</div>
+            <label class="switch">
+              <input type="checkbox" id="heating-mode-toggle">
+              <span class="slider"></span>
+            </label>
+            <span id="heating-mode-status">Off</span>
+          </div>
+          
+          <div class="control-group">
+            <div class="control-label">Cooling Mode</div>
+            <label class="switch">
+              <input type="checkbox" id="cooling-mode-toggle">
+              <span class="slider"></span>
+            </label>
+            <span id="cooling-mode-status">Off</span>
+          </div>
+          
+          <div class="control-group">
+            <div class="control-label">Scheduling</div>
+            <label class="switch">
+              <input type="checkbox" id="scheduling-toggle">
+              <span class="slider"></span>
+            </label>
+            <span id="scheduling-status">Off</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Sensors and Status Column -->
+      <div class="col">
+        <div class="card">
+          <div class="card-title">Sensor Readings</div>
+          <div id="sensor-readings">
+            <div class="loading">
+              <div class="loading-spinner"></div>
+              <p>Loading sensor data...</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-title">Input Status</div>
+          <div id="input-status">
+            <div class="loading">
+              <div class="loading-spinner"></div>
+              <p>Loading input status...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Scheduling Section -->
+    <div class="card">
+      <div class="card-title">Scheduling</div>
+      <div id="schedules-container">
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <p>Loading schedules...</p>
+        </div>
+      </div>
+      
+      <button id="add-schedule-btn" class="btn btn-primary">Add New Schedule</button>
+      
+      <!-- Add/Edit Schedule Form (Hidden by default) -->
+      <div id="schedule-form" class="hidden">
+        <h3 id="schedule-form-title">Add New Schedule</h3>
+        <form id="schedule-edit-form">
+          <input type="hidden" id="schedule-id">
+          
+          <div class="form-group">
+            <label for="schedule-relay">Relay</label>
+            <select id="schedule-relay" class="form-control">
+              <option value="1">Living Room Light</option>
+              <option value="2">Kitchen Light</option>
+              <option value="3">Bedroom Light</option>
+              <option value="4">Bathroom Light</option>
+              <option value="5">Fan</option>
+              <option value="6">AC</option>
+              <option value="7">Heater</option>
+              <option value="8">Water Pump</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="schedule-action">Action</label>
+            <select id="schedule-action" class="form-control">
+              <option value="true">Turn ON</option>
+              <option value="false">Turn OFF</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="schedule-time">Time</label>
+            <input type="time" id="schedule-time" class="form-control">
+          </div>
+          
+          <div class="form-group">
+            <label>Days</label>
+            <div class="day-selector">
+              <div class="day-btn" data-day="0">M</div>
+              <div class="day-btn" data-day="1">T</div>
+              <div class="day-btn" data-day="2">W</div>
+              <div class="day-btn" data-day="3">T</div>
+              <div class="day-btn" data-day="4">F</div>
+              <div class="day-btn" data-day="5">S</div>
+              <div class="day-btn" data-day="6">S</div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="schedule-enabled" checked>
+              Enabled
+            </label>
+          </div>
+          
+          <div class="form-group">
+            <button type="submit" class="btn btn-success">Save Schedule</button>
+            <button type="button" id="cancel-schedule-btn" class="btn btn-danger">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Alert Component -->
+  <div id="alert" class="alert"></div>
+  
+  <script>
+    // Global variables
+    let systemState = {};
+    let schedules = [];
+    let selectedDays = [true, true, true, true, true, true, true]; // Default to all days selected
+    
+    // DOM elements
+    const relayControlsEl = document.getElementById('relay-controls');
+    const sensorReadingsEl = document.getElementById('sensor-readings');
+    const inputStatusEl = document.getElementById('input-status');
+    const systemTimeEl = document.getElementById('system-time');
+    const schedulesContainerEl = document.getElementById('schedules-container');
+    const scheduleFormEl = document.getElementById('schedule-form');
+    const scheduleEditFormEl = document.getElementById('schedule-edit-form');
+    const scheduleFormTitleEl = document.getElementById('schedule-form-title');
+    const scheduleIdEl = document.getElementById('schedule-id');
+    const scheduleRelayEl = document.getElementById('schedule-relay');
+    const scheduleActionEl = document.getElementById('schedule-action');
+    const scheduleTimeEl = document.getElementById('schedule-time');
+    const scheduleEnabledEl = document.getElementById('schedule-enabled');
+    
+    // System mode toggles
+    const autoModeToggle = document.getElementById('auto-mode-toggle');
+    const heatingModeToggle = document.getElementById('heating-mode-toggle');
+    const coolingModeToggle = document.getElementById('cooling-mode-toggle');
+    const schedulingToggle = document.getElementById('scheduling-toggle');
+    
+    // Buttons
+    const addScheduleBtn = document.getElementById('add-schedule-btn');
+    const cancelScheduleBtn = document.getElementById('cancel-schedule-btn');
+    
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', init);
+    addScheduleBtn.addEventListener('click', showAddScheduleForm);
+    cancelScheduleBtn.addEventListener('click', hideScheduleForm);
+    scheduleEditFormEl.addEventListener('submit', saveSchedule);
+    
+    // Day selector buttons
+    document.querySelectorAll('.day-btn').forEach(btn => {
+      btn.addEventListener('click', toggleDaySelection);
+    });
+    
+    // System mode toggle event listeners
+    autoModeToggle.addEventListener('change', function() {
+      updateSystemMode('auto', this.checked);
+    });
+    
+    heatingModeToggle.addEventListener('change', function() {
+      updateSystemMode('heating', this.checked);
+    });
+    
+    coolingModeToggle.addEventListener('change', function() {
+      updateSystemMode('cooling', this.checked);
+    });
+    
+    schedulingToggle.addEventListener('change', function() {
+      updateSystemMode('scheduling', this.checked);
+    });
+    
+    // Initialize the application
+    function init() {
+      fetchSystemState();
+      fetchSchedules();
+      
+      // Refresh data every 10 seconds
+      setInterval(fetchSystemState, 10000);
+    }
+    
+    // Fetch system state from API
+    function fetchSystemState() {
+      fetch('/api/state')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          systemState = data;
+          updateUI();
+        })
+        .catch(error => {
+          showAlert('Error fetching system state: ' + error.message, 'danger');
+        });
+    }
+    
+    // Fetch schedules from API
+    function fetchSchedules() {
+      fetch('/api/schedules')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          schedules = data.schedules || [];
+          renderSchedules();
+        })
+        .catch(error => {
+          showAlert('Error fetching schedules: ' + error.message, 'danger');
+        });
+    }
+    
+    // Update UI with current system state
+    function updateUI() {
+      updateRelayControls();
+      updateSensorReadings();
+      updateInputStatus();
+      updateSystemTime();
+      updateSystemModes();
+    }
+    
+    // Update relay controls section
+    function updateRelayControls() {
+      if (!systemState.relays) return;
+      
+      let html = '';
+      
+      // Relay mapping
+      const relayNames = {
+        'living_room_light': 'Living Room Light',
+        'kitchen_light': 'Kitchen Light',
+        'bedroom_light': 'Bedroom Light',
+        'bathroom_light': 'Bathroom Light',
+        'fan': 'Fan',
+        'ac': 'Air Conditioner',
+        'heater': 'Heater',
+        'water_pump': 'Water Pump'
+      };
+      
+      // Relay to number mapping
+      const relayIds = {
+        'living_room_light': 1,
+        'kitchen_light': 2,
+        'bedroom_light': 3,
+        'bathroom_light': 4,
+        'fan': 5,
+        'ac': 6,
+        'heater': 7,
+        'water_pump': 8
+      };
+      
+      for (const [key, value] of Object.entries(systemState.relays)) {
+        const relayName = relayNames[key] || key;
+        const relayId = relayIds[key] || 0;
+        const statusClass = value ? 'relay-on' : 'relay-off';
+        
+        html += `
+          <div class="relay-control">
+            <div class="relay-label">
+              <span class="relay-status ${statusClass}"></span>
+              ${relayName}
+            </div>
+            <div class="relay-buttons">
+              <button class="btn btn-sm ${value ? 'btn-success' : 'btn-primary'}" 
+                      onclick="controlRelay(${relayId}, true)" 
+                      ${value ? 'disabled' : ''}>ON</button>
+              <button class="btn btn-sm ${!value ? 'btn-danger' : 'btn-primary'}" 
+                      onclick="controlRelay(${relayId}, false)" 
+                      ${!value ? 'disabled' : ''}>OFF</button>
+            </div>
+          </div>
+        `;
+      }
+      
+      relayControlsEl.innerHTML = html;
+    }
+    
+    // Update sensor readings section
+    function updateSensorReadings() {
+      if (!systemState.indoor_temp) return;
+      
+      let html = `
+        <div class="control-group">
+          <div class="control-label">Indoor Temperature</div>
+          <div class="sensor-value">${systemState.indoor_temp.toFixed(1)}<span class="sensor-unit">°C</span></div>
+        </div>
+        
+        <div class="control-group">
+          <div class="control-label">Outdoor Temperature</div>
+          <div class="sensor-value">${systemState.outdoor_temp.toFixed(1)}<span class="sensor-unit">°C</span></div>
+        </div>
+        
+        <div class="control-group">
+          <div class="control-label">Humidity</div>
+          <div class="sensor-value">${systemState.humidity.toFixed(1)}<span class="sensor-unit">%</span></div>
+        </div>
+        
+        <div class="control-group">
+          <div class="control-label">Light Level</div>
+          <div class="sensor-value">${systemState.light_level}<span class="sensor-unit">lux</span></div>
+        </div>
+      `;
+      
+      sensorReadingsEl.innerHTML = html;
+    }
+    
+    // Update input status section
+    function updateInputStatus() {
+      if (!systemState.inputs) return;
+      
+      let html = '';
+      
+      const inputLabels = {
+        'motion_living_room': 'Motion (Living Room)',
+        'motion_kitchen': 'Motion (Kitchen)',
+        'motion_bedroom': 'Motion (Bedroom)',
+        'motion_bathroom': 'Motion (Bathroom)',
+        'door_open': 'Door Sensor',
+        'window_open': 'Window Sensor',
+        'water_level_low': 'Water Level'
+      };
+      
+      for (const [key, value] of Object.entries(systemState.inputs)) {
+        const label = inputLabels[key] || key;
+        const statusClass = value ? 'relay-on' : 'relay-off';
+        const statusText = value ? 'Active' : 'Inactive';
+        
+        html += `
+          <div class="control-group">
+            <div class="control-label">${label}</div>
+            <div class="sensor-value">
+              <span class="relay-status ${statusClass}"></span>
+              ${statusText}
+            </div>
+          </div>
+        `;
+      }
+      
+      inputStatusEl.innerHTML = html;
+    }
+    
+    // Update system time display
+    function updateSystemTime() {
+      if (systemState.time) {
+        systemTimeEl.textContent = `${systemState.time} - Day: ${getDayName(systemState.day_of_week)}`;
+      }
+    }
+    
+    // Update system mode toggles
+    function updateSystemModes() {
+      if (!systemState.modes) return;
+      
+      // Update toggle states
+      autoModeToggle.checked = systemState.modes.auto;
+      heatingModeToggle.checked = systemState.modes.heating;
+      coolingModeToggle.checked = systemState.modes.cooling;
+      schedulingToggle.checked = systemState.modes.scheduling;
+      
+      // Update status text
+      document.getElementById('auto-mode-status').textContent = systemState.modes.auto ? 'Enabled' : 'Disabled';
+      document.getElementById('heating-mode-status').textContent = systemState.modes.heating ? 'Enabled' : 'Disabled';
+      document.getElementById('cooling-mode-status').textContent = systemState.modes.cooling ? 'Enabled' : 'Disabled';
+      document.getElementById('scheduling-status').textContent = systemState.modes.scheduling ? 'Enabled' : 'Disabled';
+    }
+    
+    // Render schedules
+    function renderSchedules() {
+      if (schedules.length === 0) {
+        schedulesContainerEl.innerHTML = '<p>No schedules configured yet. Click "Add New Schedule" to create one.</p>';
+        return;
+      }
+      
+      let html = '<div class="schedule-list">';
+      
+      schedules.forEach(schedule => {
+        const relayName = getRelayName(schedule.relay);
+        const timeStr = formatTime(schedule.hour, schedule.minute);
+        const actionStr = schedule.turnOn ? 'Turn ON' : 'Turn OFF';
+        const statusClass = schedule.enabled ? 'btn-success' : 'btn-danger';
+        const statusText = schedule.enabled ? 'Enabled' : 'Disabled';
+        
+        html += `
+          <div class="schedule-item">
+            <div class="row">
+              <div class="col">
+                <h4>${relayName}</h4>
+                <p>${actionStr} at ${timeStr}</p>
+                <p>Days: ${formatDays(schedule.days)}</p>
+              </div>
+              <div class="col schedule-actions">
+                <button class="btn btn-sm ${statusClass}">${statusText}</button>
+                <button class="btn btn-sm btn-primary" onclick="editSchedule(${schedule.id})">Edit</button>
+                <button class="btn btn-sm btn-danger" onclick="deleteSchedule(${schedule.id})">Delete</button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += '</div>';
+      schedulesContainerEl.innerHTML = html;
+    }
+    
+    // Control relay
+    function controlRelay(relayId, state) {
+      fetch(`/api/relay?id=${relayId}&state=${state ? 'on' : 'off'}`, {
+        method: 'POST'
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to control relay');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          fetchSystemState(); // Refresh state after successful change
+          showAlert(`Relay ${relayId} turned ${state ? 'ON' : 'OFF'}`, 'success');
+        } else {
+          throw new Error(data.error || 'Unknown error');
+        }
+      })
+      .catch(error => {
+        showAlert('Error: ' + error.message, 'danger');
+      });
+    }
+    
+    // Update system mode (auto, heating, cooling, scheduling)
+    function updateSystemMode(mode, enabled) {
+      const modeMapping = {
+        'auto': 'auto',
+        'heating': 'heating',
+        'cooling': 'cooling',
+        'scheduling': 'scheduling'
+      };
+      
+      const apiMode = modeMapping[mode];
+      if (!apiMode) return;
+      
+      fetch(`/api/mode?${apiMode}=${enabled ? 'on' : 'off'}`, {
+        method: 'POST'
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to update mode');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          fetchSystemState(); // Refresh state after successful change
+          showAlert(`${mode.charAt(0).toUpperCase() + mode.slice(1)} mode ${enabled ? 'enabled' : 'disabled'}`, 'success');
+        } else {
+          throw new Error(data.error || 'Unknown error');
+        }
+      })
+      .catch(error => {
+        showAlert('Error: ' + error.message, 'danger');
+      });
+    }
+    
+    // Show add schedule form
+    function showAddScheduleForm() {
+      // Reset form
+      scheduleIdEl.value = '';
+      scheduleRelayEl.value = '1';
+      scheduleActionEl.value = 'true';
+      scheduleTimeEl.value = '08:00';
+      scheduleEnabledEl.checked = true;
+      
+      // Reset day selection
+      selectedDays = [true, true, true, true, true, true, true];
+      updateDaySelectionUI();
+      
+      // Update form title
+      scheduleFormTitleEl.textContent = 'Add New Schedule';
+      
+      // Show form
+      scheduleFormEl.classList.remove('hidden');
+    }
+    
+    // Show edit schedule form
+    function editSchedule(id) {
+      const schedule = schedules.find(s => s.id === id);
+      if (!schedule) return;
+      
+      // Fill form with schedule data
+      scheduleIdEl.value = id;
+      scheduleRelayEl.value = schedule.relay;
+      scheduleActionEl.value = schedule.turnOn.toString();
+      scheduleTimeEl.value = formatTimeForInput(schedule.hour, schedule.minute);
+      scheduleEnabledEl.checked = schedule.enabled;
+      
+      // Set day selection
+      selectedDays = [...schedule.days];
+      updateDaySelectionUI();
+      
+      // Update form title
+      scheduleFormTitleEl.textContent = 'Edit Schedule';
+      
+      // Show form
+      scheduleFormEl.classList.remove('hidden');
+    }
+    
+    // Hide schedule form
+    function hideScheduleForm() {
+      scheduleFormEl.classList.add('hidden');
+    }
+    
+    // Save schedule
+    function saveSchedule(event) {
+      event.preventDefault();
+      
+      // Get form values
+      const id = scheduleIdEl.value;
+      const relay = parseInt(scheduleRelayEl.value);
+      const turnOn = scheduleActionEl.value === 'true';
+      const timeValue = scheduleTimeEl.value;
+      const enabled = scheduleEnabledEl.checked;
+      
+      // Parse time
+      const [hoursStr, minutesStr] = timeValue.split(':');
+      const hour = parseInt(hoursStr);
+      const minute = parseInt(minutesStr);
+      
+      // Create schedule object
+      const scheduleData = {
+        relay,
+        hour,
+        minute,
+        turnOn,
+        enabled,
+        days: selectedDays
+      };
+      
+      // Add ID if editing
+      if (id !== '') {
+        scheduleData.id = parseInt(id);
+      }
+      
+      // API endpoint and method
+      const apiUrl = '/api/schedules';
+      const method = id === '' ? 'POST' : 'PUT';
+      
+      // Send API request
+      fetch(apiUrl, {
+        method,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(scheduleData)
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to save schedule');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          fetchSchedules(); // Refresh schedules
+          hideScheduleForm();
+          showAlert(`Schedule ${id === '' ? 'added' : 'updated'} successfully`, 'success');
+        } else {
+          throw new Error(data.error || 'Unknown error');
+        }
+      })
+      .catch(error => {
+        showAlert('Error: ' + error.message, 'danger');
+      });
+    }
+    
+    // Delete schedule
+    function deleteSchedule(id) {
+      if (!confirm('Are you sure you want to delete this schedule?')) {
+        return;
+      }
+      
+      fetch('/api/schedules', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to delete schedule');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          fetchSchedules(); // Refresh schedules
+          showAlert('Schedule deleted successfully', 'success');
+        } else {
+          throw new Error(data.error || 'Unknown error');
+        }
+      })
+      .catch(error => {
+        showAlert('Error: ' + error.message, 'danger');
+      });
+    }
+    
+    // Toggle day selection
+    function toggleDaySelection() {
+      const dayIndex = parseInt(this.dataset.day);
+      selectedDays[dayIndex] = !selectedDays[dayIndex];
+      
+      // Update UI
+      this.classList.toggle('selected', selectedDays[dayIndex]);
+    }
+    
+    // Update day selection UI
+    function updateDaySelectionUI() {
+      const dayButtons = document.querySelectorAll('.day-btn');
+      dayButtons.forEach((btn, index) => {
+        btn.classList.toggle('selected', selectedDays[index]);
+      });
+    }
+    
+    // Show alert message
+    function showAlert(message, type) {
+      const alertEl = document.getElementById('alert');
+      alertEl.textContent = message;
+      alertEl.className = `alert alert-${type}`;
+      alertEl.classList.add('alert-visible');
+      
+      // Hide after 3 seconds
+      setTimeout(() => {
+        alertEl.classList.remove('alert-visible');
+      }, 3000);
+    }
+    
+    // Helper functions
+    function getRelayName(relayId) {
+      const relayNames = [
+        'Living Room Light',
+        'Kitchen Light',
+        'Bedroom Light',
+        'Bathroom Light',
+        'Fan',
+        'Air Conditioner',
+        'Heater',
+        'Water Pump'
+      ];
+      
+      return relayNames[relayId - 1] || `Relay ${relayId}`;
+    }
+    
+    function getDayName(dayIndex) {
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      return days[dayIndex];
+    }
+    
+    function formatTime(hours, minutes) {
+      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    }
+    
+    function formatTimeForInput(hours, minutes) {
+      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    }
+    
+    function formatDays(daysArray) {
+      if (!daysArray || daysArray.length !== 7) {
+        return 'Every day';
+      }
+      
+      const dayLetters = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+      const selectedDayLetters = daysArray.map((selected, index) => selected ? dayLetters[index] : '').filter(Boolean);
+      
+      if (selectedDayLetters.length === 0) {
+        return 'No days selected';
+      } else if (selectedDayLetters.length === 7) {
+        return 'Every day';
+      } else {
+        return selectedDayLetters.join(', ');
+      }
+    }
+  </script>
+</body>
+</html>
