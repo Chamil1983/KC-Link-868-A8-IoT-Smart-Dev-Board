@@ -8,7 +8,7 @@ A professional ESP32-based IoT control board featuring 8 relay outputs, 8 optica
 
 <p align="center">
 
-<img src="Pictures/KC-Link_Layout.png" alt="Cortex Link A8F-M ESP32 Smart Relay Board" width="600"/>
+<img src="/Pictures/KC-Link_Layout.png" alt="Cortex Link A8F-M ESP32 Smart Relay Board" width="600"/>
   
 </p>
 
