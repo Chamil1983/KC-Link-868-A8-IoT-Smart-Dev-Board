@@ -6,7 +6,7 @@
 
 A professional ESP32-based IoT control board featuring 8 relay outputs, 8 optically isolated inputs, analog inputs, and multiple connectivity options including Ethernet and Wi-Fi.
 
-![KC-Link PRO A8 Board](./docs/images/kc-link-pro-a8.jpg)
+![KC-Link PRO A8 Board](./Pictures/KC-Link_Layout.png)
 
 ## 🌟 Features
 
