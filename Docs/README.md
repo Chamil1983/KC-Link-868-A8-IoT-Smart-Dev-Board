@@ -270,7 +270,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-Please read [CONTRIBUTING.md](contributing.md) for details on our code of conduct and the process for submitting pull requests.
+Please read [CONTRIBUTING](contributing.md) for details on our code of conduct and the process for submitting pull requests.
 
 ## 📝 License
 
