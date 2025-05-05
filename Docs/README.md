@@ -297,7 +297,7 @@ For issues related to this repository, please open an issue on GitHub.
 ---
 
 <p align="center">
-  <img src="LOGO/MESA_logo.png" alt="MESA Logo" width="200"/><br>
+  <img src="./LOGO/MESA_logo.png" alt="MESA Logo" width="200"/><br>
 
   <I align="center">Designed and manufactured by Microcode Embedded Systems and Automation (MESA)</i>
 </p>
