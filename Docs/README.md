@@ -37,7 +37,7 @@ A professional ESP32-based IoT control board featuring 8 relay outputs, 8 optica
 ## 📋 Table of Contents
 
 - [Installation](#installation)
-- [Wiring Guide](#wiring-guide)
+- [Wiring Guide](https://github.com/Chamil1983/KC-Link-868-A8-IoT-Smart-Dev-Board/blob/main/Docs/README.md#-wiring-guide)
 - [Library Usage](#library-usage)
 - [Examples](#examples)
 - [API Reference](#api-reference)
