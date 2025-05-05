@@ -28,6 +28,12 @@ A professional ESP32-based IoT control board featuring 8 relay outputs, 8 optica
 - **Modbus RTU Protocol**: Industrial standard communication
 - **USB Interface**: With CH340C chip for easy programming
 
+<p align="center">
+
+<img src="/Pictures/Layout_Description.jpg" alt="Cortex Link A8F-M ESP32 Smart Relay Board" width="600"/>
+  
+</p>
+
 ## 📋 Table of Contents
 
 - [Installation](#installation)
